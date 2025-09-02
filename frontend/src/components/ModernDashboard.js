@@ -19,7 +19,6 @@ import {
   LocationOn,
   Phone,
   Star,
-  TrendingUp,
   Schedule,
   Cancel as CancelIcon,
   Navigation,
@@ -113,7 +112,7 @@ const ModernDashboard = () => {
         textDecoration: 'none',
         background: `linear-gradient(135deg, ${theme.palette[color].main}, ${theme.palette[color].light})`,
         color: 'white',
-        minHeight: 120,
+        minHeight: { xs: 100, sm: 120 },
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -123,7 +122,14 @@ const ModernDashboard = () => {
     >
       <Box sx={{ textAlign: 'center', zIndex: 2 }}>
         {icon}
-        <Typography variant="h6" sx={{ mt: 1, fontWeight: 600 }}>
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            mt: 1, 
+            fontWeight: 600,
+            fontSize: { xs: '0.875rem', sm: '1.25rem' }
+          }}
+        >
           {title}
         </Typography>
       </Box>
@@ -141,40 +147,53 @@ const ModernDashboard = () => {
     </MotionCard>
   );
 
-  const StatCard = ({ title, value, icon, trend, color = 'primary' }) => (
+    const StatCard = ({ title, value, icon, trend, color = 'primary' }) => (
     <MotionCard
       whileHover={{ y: -4 }}
       transition={{ duration: 0.2 }}
       sx={{ height: '100%' }}
     >
-      <CardContent>
-        <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Box>
-            <Typography color="textSecondary" variant="body2" sx={{ mb: 1 }}>
-              {title}
-            </Typography>
-            <Typography variant="h4" sx={{ fontWeight: 600, color: `${color}.main` }}>
-              {value}
-            </Typography>
-            {trend && (
-              <Box display="flex" alignItems="center" sx={{ mt: 1 }}>
-                <TrendingUp sx={{ fontSize: 16, color: 'success.main', mr: 0.5 }} />
-                <Typography variant="caption" color="success.main">
-                  {trend}
-                </Typography>
-              </Box>
-            )}
-          </Box>
+      <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
           <Avatar
             sx={{
               bgcolor: `${color}.main`,
-              width: 56,
-              height: 56,
+              width: { xs: 40, sm: 48 },
+              height: { xs: 40, sm: 48 },
             }}
           >
-            {icon}
+            {React.cloneElement(icon, { sx: { fontSize: { xs: 20, sm: 24 } } })}
           </Avatar>
+          {trend && (
+            <Chip
+              label={trend}
+              size="small"
+              sx={{
+                bgcolor: 'success.light',
+                color: 'success.dark',
+                fontWeight: 600,
+                fontSize: { xs: '0.6rem', sm: '0.75rem' },
+              }}
+            />
+          )}
         </Box>
+        <Typography 
+          variant="h4" 
+          sx={{ 
+            fontWeight: 700, 
+            mb: 1,
+            fontSize: { xs: '1.5rem', sm: '2rem' }
+          }}
+        >
+          {value}
+        </Typography>
+        <Typography 
+          variant="body2" 
+          color="textSecondary"
+          sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+        >
+          {title}
+        </Typography>
       </CardContent>
     </MotionCard>
   );
@@ -209,24 +228,51 @@ const ModernDashboard = () => {
             />
           </Box>
 
-          <Grid container spacing={3}>
+          <Grid container spacing={{ xs: 2, sm: 3 }}>
             <Grid item xs={12} md={8}>
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="body2" sx={{ opacity: 0.9, mb: 1 }}>
+              <Box sx={{ mb: { xs: 2, sm: 3 } }}>
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    opacity: 0.9, 
+                    mb: 1,
+                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
+                  }}
+                >
                   Route: {currentRide.source} → {currentRide.destination}
                 </Typography>
-                <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
+                <Typography 
+                  variant="h5" 
+                  sx={{ 
+                    fontWeight: 600, 
+                    mb: 2,
+                    fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                  }}
+                >
                   Booking ID: {currentRide.bookingId}
                 </Typography>
 
-                <Box display="flex" alignItems="center" gap={2} sx={{ mb: 2 }}>
+                <Box 
+                  display="flex" 
+                  alignItems="center" 
+                  gap={{ xs: 1, sm: 2 }} 
+                  sx={{ 
+                    mb: 2,
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    alignItems: { xs: 'flex-start', sm: 'center' }
+                  }}
+                >
                   <Box display="flex" alignItems="center">
-                    <AccessTime sx={{ fontSize: 18, mr: 1 }} />
-                    <Typography variant="body2">{currentRide.totalTime} min</Typography>
+                    <AccessTime sx={{ fontSize: { xs: 16, sm: 18 }, mr: 1 }} />
+                    <Typography variant="body2" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
+                      {currentRide.totalTime} min
+                    </Typography>
                   </Box>
                   <Box display="flex" alignItems="center">
-                    <AttachMoney sx={{ fontSize: 18, mr: 1 }} />
-                    <Typography variant="body2">${currentRide.estimatedCost}</Typography>
+                    <AttachMoney sx={{ fontSize: { xs: 16, sm: 18 }, mr: 1 }} />
+                    <Typography variant="body2" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
+                      ${currentRide.estimatedCost}
+                    </Typography>
                   </Box>
                 </Box>
 
@@ -405,17 +451,33 @@ const ModernDashboard = () => {
   }
 
   return (
-    <Box sx={{ p: 3, maxWidth: 1400, mx: 'auto' }}>
+    <Box sx={{ 
+      p: { xs: 2, sm: 3 }, 
+      maxWidth: 1400, 
+      mx: 'auto',
+      minHeight: '100vh'
+    }}>
       {/* Header */}
       <MotionBox
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        sx={{ mb: 4 }}
+        sx={{ mb: { xs: 3, sm: 4 } }}
       >
-        <Typography variant="h3" sx={{ fontWeight: 600, mb: 1 }}>
+        <Typography 
+          variant="h3" 
+          sx={{ 
+            fontWeight: 600, 
+            mb: 1,
+            fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }
+          }}
+        >
           Good morning! 👋
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography 
+          variant="body1" 
+          color="textSecondary"
+          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+        >
           Manage your rides and track your journeys
         </Typography>
       </MotionBox>
@@ -434,30 +496,37 @@ const ModernDashboard = () => {
         transition={{ delay: 0.1 }}
         sx={{ mb: 4 }}
       >
-        <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            fontWeight: 600, 
+            mb: 3,
+            fontSize: { xs: '1.5rem', sm: '2rem' }
+          }}
+        >
           Quick Actions
         </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={6} sm={3}>
+        <Grid container spacing={{ xs: 2, sm: 3 }}>
+          <Grid item xs={6} sm={6} md={3}>
             <QuickActionCard
               title="Book Ride"
-              icon={<DirectionsCar sx={{ fontSize: 32 }} />}
+              icon={<DirectionsCar sx={{ fontSize: { xs: 24, sm: 32 } }} />}
               color="primary"
               to="/book"
             />
           </Grid>
-          <Grid item xs={6} sm={3}>
+          <Grid item xs={6} sm={6} md={3}>
             <QuickActionCard
               title="Track Ride"
-              icon={<LocationOn sx={{ fontSize: 32 }} />}
+              icon={<LocationOn sx={{ fontSize: { xs: 24, sm: 32 } }} />}
               color="secondary"
               to="/track"
             />
           </Grid>
-          <Grid item xs={6} sm={3}>
+          <Grid item xs={6} sm={6} md={3}>
             <QuickActionCard
               title="Cancel Ride"
-              icon={<CancelIcon sx={{ fontSize: 32 }} />}
+              icon={<CancelIcon sx={{ fontSize: { xs: 24, sm: 32 } }} />}
               color="error"
               to="/cancel"
             />
@@ -480,11 +549,18 @@ const ModernDashboard = () => {
         transition={{ delay: 0.2 }}
         sx={{ mb: 4 }}
       >
-        <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            fontWeight: 600, 
+            mb: 3,
+            fontSize: { xs: '1.5rem', sm: '2rem' }
+          }}
+        >
           Your Stats
         </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
+        <Grid container spacing={{ xs: 2, sm: 3 }}>
+          <Grid item xs={6} sm={6} md={3}>
             <StatCard
               title="Total Rides"
               value={stats.totalBookings}
@@ -493,7 +569,7 @@ const ModernDashboard = () => {
               color="primary"
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={6} sm={6} md={3}>
             <StatCard
               title="Active Rides"
               value={stats.activeBookings}
@@ -501,7 +577,7 @@ const ModernDashboard = () => {
               color="warning"
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={6} sm={6} md={3}>
             <StatCard
               title="Completed"
               value={stats.completedTrips}

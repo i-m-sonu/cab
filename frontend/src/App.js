@@ -11,6 +11,7 @@ import CancelBooking from './components/CancelBooking';
 import CabManagement from './components/CabManagement';
 import RouteManagement from './components/RouteManagement';
 import 'react-toastify/dist/ReactToastify.css';
+import './styles/responsive.css';
 
 function App() {
   return (

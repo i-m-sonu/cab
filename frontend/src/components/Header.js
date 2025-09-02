@@ -55,17 +55,17 @@ const Header = () => {
         borderBottom: `1px solid ${muiTheme.palette.divider}`,
       }}
     >
-      <Toolbar sx={{ px: { xs: 2, md: 4 } }}>
+      <Toolbar sx={{ px: { xs: 1, sm: 2, md: 4 } }}>
         {/* Logo */}
-        <Box display="flex" alignItems="center" sx={{ mr: 4 }}>
+        <Box display="flex" alignItems="center" sx={{ mr: { xs: 2, sm: 4 } }}>
           <motion.div
             whileHover={{ rotate: 360 }}
             transition={{ duration: 0.5 }}
           >
             <DirectionsCar 
               sx={{ 
-                mr: 2, 
-                fontSize: 32,
+                mr: { xs: 1, sm: 2 }, 
+                fontSize: { xs: 28, sm: 32 },
                 color: 'primary.main',
               }} 
             />
@@ -79,7 +79,8 @@ const Header = () => {
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               color: 'transparent',
-              display: { xs: 'none', sm: 'block' }
+              display: { xs: 'none', sm: 'block' },
+              fontSize: { sm: '1.25rem', md: '1.5rem' }
             }}
           >
             RideFlow
@@ -87,13 +88,20 @@ const Header = () => {
         </Box>
         
         {/* Navigation */}
-        <Box sx={{ display: 'flex', gap: 1, flexGrow: 1 }}>
+        <Box sx={{ 
+          display: 'flex', 
+          gap: { xs: 0.5, sm: 1 }, 
+          flexGrow: 1,
+          overflow: 'auto',
+          '&::-webkit-scrollbar': { display: 'none' },
+          scrollbarWidth: 'none'
+        }}>
           {navItems.map((item) => (
             <MotionButton
               key={item.path}
               component={RouterLink}
               to={item.path}
-              startIcon={item.icon}
+              startIcon={<Box sx={{ display: { xs: 'none', sm: 'flex' } }}>{item.icon}</Box>}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               sx={{
@@ -104,19 +112,27 @@ const Header = () => {
                   ? 'white' 
                   : 'text.primary',
                 borderRadius: 2,
-                px: 2,
+                px: { xs: 1, sm: 2 },
                 py: 1,
-                minWidth: 'auto',
+                minWidth: { xs: 'auto', sm: 'auto' },
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 '&:hover': {
                   bgcolor: location.pathname === item.path 
                     ? 'primary.dark' 
                     : 'action.hover',
                 },
                 transition: 'all 0.2s ease',
+                flexShrink: 0,
               }}
             >
-              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+              <Box sx={{ 
+                display: { xs: 'none', sm: 'block' },
+                whiteSpace: 'nowrap'
+              }}>
                 {item.label}
+              </Box>
+              <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
+                {item.icon}
               </Box>
             </MotionButton>
           ))}

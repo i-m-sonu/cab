@@ -1,0 +1,263 @@
+/* Enhanced Responsive Styles for Cab Booking App */
+
+/* Global responsive utilities */
+.container-responsive {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Mobile-first responsive breakpoints */
+@media (max-width: 599px) {
+  /* Extra small devices */
+  .hide-on-mobile {
+    display: none !important;
+  }
+  
+  .mobile-only {
+    display: block !important;
+  }
+  
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+  
+  .mobile-center {
+    text-align: center !important;
+  }
+  
+  .mobile-padding {
+    padding: 8px !important;
+  }
+  
+  .mobile-margin {
+    margin: 8px !important;
+  }
+  
+  /* Reduce font sizes on mobile */
+  .responsive-title {
+    font-size: 1.5rem !important;
+  }
+  
+  .responsive-subtitle {
+    font-size: 1rem !important;
+  }
+  
+  .responsive-body {
+    font-size: 0.875rem !important;
+  }
+  
+  .responsive-caption {
+    font-size: 0.75rem !important;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 959px) {
+  /* Small to medium devices */
+  .tablet-hide {
+    display: none !important;
+  }
+  
+  .tablet-show {
+    display: block !important;
+  }
+}
+
+@media (min-width: 960px) {
+  /* Large devices */
+  .desktop-only {
+    display: block !important;
+  }
+  
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* Touch-friendly button sizes */
+@media (max-width: 599px) {
+  .MuiButton-root {
+    min-height: 48px;
+    padding: 12px 16px;
+  }
+  
+  .MuiIconButton-root {
+    padding: 12px;
+  }
+  
+  .MuiChip-root {
+    height: 32px;
+  }
+}
+
+/* Improved touch targets for mobile */
+@media (pointer: coarse) {
+  .MuiButton-root,
+  .MuiIconButton-root,
+  .MuiListItem-root {
+    min-height: 44px;
+  }
+}
+
+/* Cards responsive spacing */
+.responsive-card {
+  margin: 8px;
+  border-radius: 12px;
+}
+
+@media (min-width: 600px) {
+  .responsive-card {
+    margin: 16px;
+    border-radius: 16px;
+  }
+}
+
+@media (min-width: 960px) {
+  .responsive-card {
+    margin: 24px;
+    border-radius: 20px;
+  }
+}
+
+/* Grid responsive helpers */
+.responsive-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+  .responsive-grid {
+    gap: 24px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 960px) {
+  .responsive-grid {
+    gap: 32px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .responsive-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Form responsive improvements */
+.responsive-form {
+  width: 100%;
+  max-width: none;
+}
+
+@media (min-width: 600px) {
+  .responsive-form {
+    max-width: 500px;
+  }
+}
+
+@media (min-width: 960px) {
+  .responsive-form {
+    max-width: 600px;
+  }
+}
+
+/* Navigation responsive helpers */
+.responsive-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.responsive-nav::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .responsive-nav {
+    gap: 8px;
+    overflow-x: visible;
+  }
+}
+
+/* Status indicators responsive */
+.status-indicator {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+@media (min-width: 600px) {
+  .status-indicator {
+    font-size: 0.875rem;
+    padding: 6px 12px;
+    border-radius: 16px;
+  }
+}
+
+/* Animation optimizations for mobile */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Safe areas for notched devices */
+@supports (padding: max(0px)) {
+  .safe-area-top {
+    padding-top: max(16px, env(safe-area-inset-top));
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  
+  .safe-area-left {
+    padding-left: max(16px, env(safe-area-inset-left));
+  }
+  
+  .safe-area-right {
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+}
+
+/* Dark mode responsive adjustments */
+@media (prefers-color-scheme: dark) {
+  .responsive-card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .MuiButton-root,
+  .MuiCard-root {
+    border: 2px solid;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .MuiButton-root,
+  .MuiIconButton-root {
+    display: none !important;
+  }
+  
+  .print-friendly {
+    color: black !important;
+    background: white !important;
+  }
+}

@@ -272,17 +272,33 @@ const ModernBookingForm = () => {
   );
 
   return (
-    <Box sx={{ p: 3, maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ 
+      p: { xs: 2, sm: 3 }, 
+      maxWidth: 1200, 
+      mx: 'auto',
+      minHeight: '100vh'
+    }}>
       {/* Header */}
       <MotionBox
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        sx={{ mb: 4 }}
+        sx={{ mb: { xs: 3, sm: 4 } }}
       >
-        <Typography variant="h3" sx={{ fontWeight: 600, mb: 1 }}>
+        <Typography 
+          variant="h3" 
+          sx={{ 
+            fontWeight: 600, 
+            mb: 1,
+            fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }
+          }}
+        >
           Book Your Ride 🚗
         </Typography>
-        <Typography variant="body1" color="textSecondary">
+        <Typography 
+          variant="body1" 
+          color="textSecondary"
+          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+        >
           Choose your pickup and destination to get started
         </Typography>
       </MotionBox>
@@ -348,22 +364,29 @@ const ModernBookingForm = () => {
         </MotionCard>
       )}
 
-      <Grid container spacing={4}>
+      <Grid container spacing={{ xs: 2, sm: 4 }}>
         {/* Booking Form */}
         <Grid item xs={12} md={8}>
           <MotionCard
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
-            sx={{ mb: 3 }}
+            sx={{ mb: { xs: 2, sm: 3 } }}
           >
-            <CardContent sx={{ p: 4 }}>
-              <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+            <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+              <Typography 
+                variant="h5" 
+                sx={{ 
+                  fontWeight: 600, 
+                  mb: 3,
+                  fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                }}
+              >
                 Trip Details
               </Typography>
 
               <Box component="form" onSubmit={handleSubmit}>
-                <Grid container spacing={3}>
+                <Grid container spacing={{ xs: 2, sm: 3 }}>
                   {/* Email Field */}
                   <Grid item xs={12}>
                     <TextField
@@ -478,45 +501,93 @@ const ModernBookingForm = () => {
               animate={{ opacity: 1, y: 0 }}
               sx={{ mb: 3 }}
             >
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
                 <Box display="flex" alignItems="center" sx={{ mb: 3 }}>
                   <CheckCircle sx={{ color: 'success.main', mr: 2 }} />
-                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                  <Typography 
+                    variant="h5" 
+                    sx={{ 
+                      fontWeight: 600,
+                      fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                    }}
+                  >
                     Route Found!
                   </Typography>
                 </Box>
 
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={4}>
+                <Grid container spacing={{ xs: 2, sm: 3 }}>
+                  <Grid item xs={4} sm={4}>
                     <Box sx={{ textAlign: 'center' }}>
-                      <AccessTime sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      <AccessTime sx={{ 
+                        fontSize: { xs: 32, sm: 40 }, 
+                        color: 'primary.main', 
+                        mb: 1 
+                      }} />
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          fontWeight: 600,
+                          fontSize: { xs: '1rem', sm: '1.25rem' }
+                        }}
+                      >
                         {routeCalculation.totalTime} min
                       </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        Estimated Duration
+                      <Typography 
+                        variant="body2" 
+                        color="textSecondary"
+                        sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                      >
+                        Duration
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={4} sm={4}>
                     <Box sx={{ textAlign: 'center' }}>
-                      <RouteIcon sx={{ fontSize: 40, color: 'secondary.main', mb: 1 }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      <RouteIcon sx={{ 
+                        fontSize: { xs: 32, sm: 40 }, 
+                        color: 'secondary.main', 
+                        mb: 1 
+                      }} />
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          fontWeight: 600,
+                          fontSize: { xs: '1rem', sm: '1.25rem' }
+                        }}
+                      >
                         {routeCalculation.path.length - 1} stops
                       </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        Optimal Path
+                      <Typography 
+                        variant="body2" 
+                        color="textSecondary"
+                        sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                      >
+                        Path
                       </Typography>
                     </Box>
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={4} sm={4}>
                     <Box sx={{ textAlign: 'center' }}>
-                      <TrendingUp sx={{ fontSize: 40, color: 'success.main', mb: 1 }} />
-                      <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        Best Route
+                      <TrendingUp sx={{ 
+                        fontSize: { xs: 32, sm: 40 }, 
+                        color: 'success.main', 
+                        mb: 1 
+                      }} />
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          fontWeight: 600,
+                          fontSize: { xs: '1rem', sm: '1.25rem' }
+                        }}
+                      >
+                        Best
                       </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        Fastest Available
+                      <Typography 
+                        variant="body2" 
+                        color="textSecondary"
+                        sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                      >
+                        Route
                       </Typography>
                     </Box>
                   </Grid>
