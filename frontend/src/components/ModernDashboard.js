@@ -47,33 +47,15 @@ const ModernDashboard = () => {
 
   useEffect(() => {
     fetchDashboardData();
-    
-    // Fallback timeout to prevent infinite loading
-    const timeoutId = setTimeout(() => {
-      if (loading) {
-        console.log('Loading timeout reached, setting loading to false');
-        setLoading(false);
-        setStats({
-          totalBookings: 0,
-          activeBookings: 0,
-          completedTrips: 0,
-          recentBookings: [],
-        });
-      }
-    }, 5000); // 5 second timeout
-
-    return () => clearTimeout(timeoutId);
-  }, [loading]);
+  }, []);
 
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      console.log('Fetching dashboard data...');
       const [bookingsRes] = await Promise.all([
         bookingService.getAllBookings(),
       ]);
 
-      console.log('Bookings response:', bookingsRes);
       const bookings = bookingsRes.data;
       const activeBookings = bookings.filter(b => b.status === 'confirmed' || b.status === 'in-progress');
       const completedBookings = bookings.filter(b => b.status === 'completed');
@@ -81,28 +63,17 @@ const ModernDashboard = () => {
       // Simulate current ride
       const currentRide = activeBookings.length > 0 ? activeBookings[0] : null;
 
-      const statsData = {
+      setStats({
         totalBookings: bookings.length,
         activeBookings: activeBookings.length,
         completedTrips: completedBookings.length,
         recentBookings: bookings.slice(0, 5),
-      };
+      });
 
-      console.log('Stats data:', statsData);
-      setStats(statsData);
       setCurrentRide(currentRide);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
-      // Set default stats even if API fails
-      setStats({
-        totalBookings: 0,
-        activeBookings: 0,
-        completedTrips: 0,
-        recentBookings: [],
-      });
-      setCurrentRide(null);
     } finally {
-      console.log('Setting loading to false');
       setLoading(false);
     }
   };
@@ -130,50 +101,45 @@ const ModernDashboard = () => {
     return colors[status] || 'default';
   };
 
-  const QuickActionCard = ({ title, icon, color, to }) => {
-    // Fallback to primary if color doesn't exist in theme
-    const safeColor = theme.palette[color] ? color : 'primary';
-    
-    return (
-      <MotionCard
-        component={RouterLink}
-        to={to}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+  const QuickActionCard = ({ title, icon, color, to, onClick }) => (
+    <MotionCard
+      component={to ? RouterLink : 'div'}
+      to={to}
+      onClick={onClick}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      sx={{
+        cursor: 'pointer',
+        textDecoration: 'none',
+        background: `linear-gradient(135deg, ${theme.palette[color].main}, ${theme.palette[color].light})`,
+        color: 'white',
+        minHeight: 120,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <Box sx={{ textAlign: 'center', zIndex: 2 }}>
+        {icon}
+        <Typography variant="h6" sx={{ mt: 1, fontWeight: 600 }}>
+          {title}
+        </Typography>
+      </Box>
+      <Box
         sx={{
-          textDecoration: 'none',
-          cursor: 'pointer',
-          background: `linear-gradient(135deg, ${theme.palette[safeColor].main}, ${theme.palette[safeColor].dark})`,
-          color: 'white',
-          position: 'relative',
-          overflow: 'hidden',
-          height: { xs: 120, sm: 140 },
+          position: 'absolute',
+          top: -50,
+          right: -50,
+          width: 100,
+          height: 100,
+          background: 'rgba(255,255,255,0.1)',
+          borderRadius: '50%',
         }}
-      >
-        <CardContent sx={{ 
-          textAlign: 'center', 
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          p: { xs: 1.5, sm: 2 }
-        }}>
-          <Box sx={{ mb: { xs: 1, sm: 2 } }}>
-            {icon}
-          </Box>
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              fontWeight: 600,
-              fontSize: { xs: '0.9rem', sm: '1.1rem' }
-            }}
-          >
-            {title}
-          </Typography>
-        </CardContent>
-      </MotionCard>
-    );
-  };
+      />
+    </MotionCard>
+  );
 
   const StatCard = ({ title, value, icon, trend, color = 'primary' }) => (
     <MotionCard
@@ -373,73 +339,32 @@ const ModernDashboard = () => {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.1 }}
-      sx={{ 
-        mb: 2,
-        '&:hover': {
-          boxShadow: theme.shadows[4],
-        },
-      }}
+      sx={{ mb: 2 }}
     >
-      <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: { xs: 'column', sm: 'row' },
-          alignItems: { xs: 'flex-start', sm: 'center' },
-          gap: { xs: 2, sm: 0 }
-        }}>
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center',
-            flex: 1,
-            width: { xs: '100%', sm: 'auto' }
-          }}>
+      <CardContent sx={{ py: 2 }}>
+        <Box display="flex" alignItems="center" justifyContent="space-between">
+          <Box display="flex" alignItems="center" flex={1}>
             <Avatar
               sx={{
                 bgcolor: `${getStatusColor(booking.status)}.main`,
-                width: { xs: 36, sm: 40 },
-                height: { xs: 36, sm: 40 },
+                width: 40,
+                height: 40,
                 mr: 2,
               }}
             >
-              <DirectionsCar sx={{ fontSize: { xs: 18, sm: 20 } }} />
+              <DirectionsCar sx={{ fontSize: 20 }} />
             </Avatar>
             <Box flex={1}>
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  fontWeight: 600, 
-                  mb: 0.5,
-                  fontSize: { xs: '0.9rem', sm: '1rem' }
-                }}
-              >
+              <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
                 {booking.source} → {booking.destination}
               </Typography>
-              <Typography 
-                variant="caption" 
-                color="textSecondary"
-                sx={{ fontSize: { xs: '0.75rem', sm: '0.8rem' } }}
-              >
+              <Typography variant="caption" color="textSecondary">
                 {new Date(booking.createdAt).toLocaleDateString()} • {booking.bookingId}
               </Typography>
             </Box>
           </Box>
-          <Box sx={{ 
-            textAlign: { xs: 'left', sm: 'right' }, 
-            display: 'flex', 
-            flexDirection: { xs: 'row', sm: 'column' },
-            alignItems: { xs: 'center', sm: 'flex-end' },
-            justifyContent: { xs: 'space-between', sm: 'center' },
-            gap: { xs: 2, sm: 1 },
-            width: { xs: '100%', sm: 'auto' }
-          }}>
-            <Typography 
-              variant="body1" 
-              sx={{ 
-                fontWeight: 600, 
-                mb: { xs: 0, sm: 0.5 },
-                fontSize: { xs: '0.9rem', sm: '1rem' }
-              }}
-            >
+          <Box sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
+            <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
               ${booking.estimatedCost}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -448,7 +373,6 @@ const ModernDashboard = () => {
                 size="small"
                 color={getStatusColor(booking.status)}
                 variant="outlined"
-                sx={{ fontSize: { xs: '0.7rem', sm: '0.75rem' } }}
               />
               {(booking.status === 'confirmed' || booking.status === 'in-progress') && (
                 <IconButton
@@ -462,7 +386,7 @@ const ModernDashboard = () => {
                   }}
                   title="Cancel Booking"
                 >
-                  <CancelIcon sx={{ fontSize: { xs: 16, sm: 18 } }} />
+                  <CancelIcon sx={{ fontSize: 18 }} />
                 </IconButton>
               )}
             </Box>
@@ -474,49 +398,31 @@ const ModernDashboard = () => {
 
   if (loading) {
     return (
-      <Box sx={{ p: { xs: 1, sm: 2, md: 3 }, maxWidth: 1400, mx: 'auto' }}>
-        <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-          <Box textAlign="center">
-            <LinearProgress sx={{ width: '200px', mb: 2 }} />
-            <Typography variant="body2" color="textSecondary">
-              Loading dashboard...
-            </Typography>
-          </Box>
-        </Box>
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+        <LinearProgress sx={{ width: '200px' }} />
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 2, md: 3 }, maxWidth: 1400, mx: 'auto' }}>
+    <Box sx={{ p: 3, maxWidth: 1400, mx: 'auto' }}>
       {/* Header */}
       <MotionBox
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        sx={{ mb: { xs: 2, sm: 3, md: 4 } }}
+        sx={{ mb: 4 }}
       >
-        <Typography 
-          variant="h3" 
-          sx={{ 
-            fontWeight: 600, 
-            mb: 1,
-            fontSize: { xs: '1.75rem', sm: '2.5rem', md: '3rem' }
-          }}
-        >
+        <Typography variant="h3" sx={{ fontWeight: 600, mb: 1 }}>
           Good morning! 👋
         </Typography>
-        <Typography 
-          variant="body1" 
-          color="textSecondary"
-          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
-        >
+        <Typography variant="body1" color="textSecondary">
           Manage your rides and track your journeys
         </Typography>
       </MotionBox>
 
       {/* Live Ride Section */}
       {currentRide && (
-        <Box sx={{ mb: { xs: 2, sm: 3, md: 4 } }}>
+        <Box sx={{ mb: 4 }}>
           <LiveRideCard />
         </Box>
       )}
@@ -526,23 +432,16 @@ const ModernDashboard = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        sx={{ mb: { xs: 2, sm: 3, md: 4 } }}
+        sx={{ mb: 4 }}
       >
-        <Typography 
-          variant="h5" 
-          sx={{ 
-            fontWeight: 600, 
-            mb: { xs: 2, sm: 3 },
-            fontSize: { xs: '1.25rem', sm: '1.5rem' }
-          }}
-        >
+        <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
           Quick Actions
         </Typography>
-        <Grid container spacing={{ xs: 2, sm: 3 }}>
+        <Grid container spacing={3}>
           <Grid item xs={6} sm={3}>
             <QuickActionCard
               title="Book Ride"
-              icon={<DirectionsCar sx={{ fontSize: { xs: 24, sm: 32 } }} />}
+              icon={<DirectionsCar sx={{ fontSize: 32 }} />}
               color="primary"
               to="/book"
             />
@@ -550,7 +449,7 @@ const ModernDashboard = () => {
           <Grid item xs={6} sm={3}>
             <QuickActionCard
               title="Track Ride"
-              icon={<LocationOn sx={{ fontSize: { xs: 24, sm: 32 } }} />}
+              icon={<LocationOn sx={{ fontSize: 32 }} />}
               color="secondary"
               to="/track"
             />
@@ -558,7 +457,7 @@ const ModernDashboard = () => {
           <Grid item xs={6} sm={3}>
             <QuickActionCard
               title="Cancel Ride"
-              icon={<CancelIcon sx={{ fontSize: { xs: 24, sm: 32 } }} />}
+              icon={<CancelIcon sx={{ fontSize: 32 }} />}
               color="error"
               to="/cancel"
             />
@@ -566,8 +465,8 @@ const ModernDashboard = () => {
           <Grid item xs={6} sm={3}>
             <QuickActionCard
               title="Ride History"
-              icon={<History sx={{ fontSize: { xs: 24, sm: 32 } }} />}
-              color="info"
+              icon={<History sx={{ fontSize: 32 }} />}
+              color="accent"
               to="/track"
             />
           </Grid>
@@ -579,19 +478,12 @@ const ModernDashboard = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        sx={{ mb: { xs: 2, sm: 3, md: 4 } }}
+        sx={{ mb: 4 }}
       >
-        <Typography 
-          variant="h5" 
-          sx={{ 
-            fontWeight: 600, 
-            mb: { xs: 2, sm: 3 },
-            fontSize: { xs: '1.25rem', sm: '1.5rem' }
-          }}
-        >
+        <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
           Your Stats
         </Typography>
-        <Grid container spacing={{ xs: 2, sm: 3 }}>
+        <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <StatCard
               title="Total Rides"

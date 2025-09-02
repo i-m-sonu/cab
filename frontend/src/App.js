@@ -17,14 +17,7 @@ function App() {
     <AppThemeProvider>
       <div className="App">
         <Header />
-        <Container 
-          maxWidth="xl" 
-          sx={{ 
-            py: { xs: 1, sm: 2 }, 
-            px: { xs: 1, sm: 2, md: 3 },
-            minHeight: 'calc(100vh - 64px)'
-          }}
-        >
+        <Container maxWidth="xl" sx={{ py: 0, px: { xs: 1, sm: 2 } }}>
           <Routes>
             <Route path="/" element={<ModernDashboard />} />
             <Route path="/book" element={<ModernBookingForm />} />

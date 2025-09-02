@@ -272,28 +272,17 @@ const ModernBookingForm = () => {
   );
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 2, md: 3 }, maxWidth: 1200, mx: 'auto' }}>
+    <Box sx={{ p: 3, maxWidth: 1200, mx: 'auto' }}>
       {/* Header */}
       <MotionBox
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        sx={{ mb: { xs: 2, sm: 3, md: 4 } }}
+        sx={{ mb: 4 }}
       >
-        <Typography 
-          variant="h3" 
-          sx={{ 
-            fontWeight: 600, 
-            mb: 1,
-            fontSize: { xs: '1.75rem', sm: '2.5rem', md: '3rem' }
-          }}
-        >
+        <Typography variant="h3" sx={{ fontWeight: 600, mb: 1 }}>
           Book Your Ride 🚗
         </Typography>
-        <Typography 
-          variant="body1" 
-          color="textSecondary"
-          sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
-        >
+        <Typography variant="body1" color="textSecondary">
           Choose your pickup and destination to get started
         </Typography>
       </MotionBox>
@@ -312,37 +301,23 @@ const ModernBookingForm = () => {
             overflow: 'hidden',
           }}
         >
-          <CardContent sx={{ textAlign: 'center', py: { xs: 3, sm: 4 } }}>
+          <CardContent sx={{ textAlign: 'center', py: 4 }}>
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, duration: 0.5, ease: "easeOut" }}
             >
-              <CheckCircle sx={{ fontSize: { xs: 48, sm: 60 }, mb: 2 }} />
+              <CheckCircle sx={{ fontSize: 60, mb: 2 }} />
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
             >
-              <Typography 
-                variant="h4" 
-                sx={{ 
-                  fontWeight: 600, 
-                  mb: 2,
-                  fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' }
-                }}
-              >
+              <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
                 Booking Confirmed! 🎉
               </Typography>
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  mb: 2, 
-                  opacity: 0.9,
-                  fontSize: { xs: '1rem', sm: '1.25rem' }
-                }}
-              >
+              <Typography variant="h6" sx={{ mb: 2, opacity: 0.9 }}>
                 Taking you to dashboard to track your ride...
               </Typography>
             </motion.div>
@@ -373,7 +348,7 @@ const ModernBookingForm = () => {
         </MotionCard>
       )}
 
-      <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
+      <Grid container spacing={4}>
         {/* Booking Form */}
         <Grid item xs={12} md={8}>
           <MotionCard
@@ -382,20 +357,13 @@ const ModernBookingForm = () => {
             transition={{ delay: 0.1 }}
             sx={{ mb: 3 }}
           >
-            <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
-              <Typography 
-                variant="h5" 
-                sx={{ 
-                  fontWeight: 600, 
-                  mb: 3,
-                  fontSize: { xs: '1.25rem', sm: '1.5rem' }
-                }}
-              >
+            <CardContent sx={{ p: 4 }}>
+              <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
                 Trip Details
               </Typography>
 
               <Box component="form" onSubmit={handleSubmit}>
-                <Grid container spacing={{ xs: 2, sm: 3 }}>
+                <Grid container spacing={3}>
                   {/* Email Field */}
                   <Grid item xs={12}>
                     <TextField
