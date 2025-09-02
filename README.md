@@ -1,68 +1,49 @@
 # 🚗 Modern Cab Booking System
 
-A comprehensive full-stack web application featuring modern UI design, shortest path calculation, real-time booking management, and intelligent routing. Built with React and Node.js with a focus on user experience and mobile responsiveness.
+A responsive full-stack cab booking application with shortest path routing, real-time pricing, and modern UI. Features Material-UI design, mobile-first approach, and no database setup required.
 
-## ✨ Key Features
+## ✨ Features
 
-### 🎨 Modern User Experience
-- **Premium UI Design**: Beautiful dark/light theme with gradient backgrounds and animations
-- **Fully Responsive**: Optimized for mobile, tablet, and desktop devices
-- **Theme Toggle**: Switch between dark and light modes with smooth transitions
-- **Micro-interactions**: Framer Motion animations for enhanced user experience
-- **Material-UI Components**: Consistent and accessible design system
+- 🎯 **Smart Routing** - Dijkstra's algorithm for optimal path calculation
+- 💰 **Dynamic Pricing** - 5 cab types with real-time cost estimation  
+- 📱 **Mobile First** - Fully responsive with touch optimization
+- 🌙 **Dark/Light Theme** - Toggle with smooth animations
+- ⚡ **No Setup** - In-memory database, ready to run
+- 📧 **Optional Email** - Book with or without email notifications
 
-### 🚀 Core Functionality
-- **Smart Booking**: Optional email system - book rides with or without email
-- **Shortest Path Algorithm**: Dijkstra's algorithm for optimal route calculation
-- **Real-time Tracking**: Live booking status with progress indicators
-- **Instant Cancellation**: Cancel bookings with inline action buttons
-- **Auto-redirect**: Automatic dashboard navigation after successful booking
-- **Dynamic Pricing**: Multiple cab types with different pricing models
+## 🚀 Quick Start
 
-### 📱 Mobile-First Design
-- **Touch-friendly Interface**: 44px minimum touch targets for mobile
-- **Responsive Navigation**: Adaptive header with mobile-optimized menus
-- **Safe Area Support**: Proper handling of notched devices
-- **Performance Optimized**: Reduced animations for low-powered devices
-- **Accessibility**: High contrast and reduced motion support
+```bash
+# Clone & Install
+git clone https://github.com/i-m-sonu/cab.git
+cd cab
 
-### 🛠️ Admin Features
-- **Cab Fleet Management**: Add, edit, delete, and manage cab availability
-- **Route Configuration**: Dynamic route management with real-time updates
-- **Booking Analytics**: Comprehensive dashboard with statistics
-- **Status Management**: Real-time booking status updates
+# Start Backend (Terminal 1)
+cd backend && npm install && node serverSimple.js
 
-## 🏗️ Modern Architecture
+# Start Frontend (Terminal 2)  
+cd frontend && npm install && npm start
+```
 
-### Backend (Node.js/Express)
-- **RESTful API**: Clean, modern API design with proper HTTP methods
-- **In-Memory Database**: Fast demo database (easily replaceable with MongoDB)
-- **Email Integration**: Nodemailer for optional booking notifications
-- **Error Handling**: Comprehensive error management with proper HTTP status codes
-- **CORS Support**: Cross-origin resource sharing for frontend integration
+**Access:** [http://localhost:3000](http://localhost:3000)
 
-### Frontend (React 18+)
-- **Modern React**: Hooks-based architecture with functional components
-- **Material-UI v5**: Latest MUI components with custom theming
-- **Framer Motion**: Smooth animations and micro-interactions
-- **React Router v6**: Modern routing with navigation guards
-- **Responsive Design**: Mobile-first CSS with breakpoint utilities
-- **TypeScript Ready**: Prepared for TypeScript migration
+## 📁 Project Structure
 
-## 🎨 Design System
-
-### Color Palette
-- **Primary**: Teal (#00D2AA) - Modern and professional
-- **Secondary**: Electric Blue (#6366F1) - Tech-forward accent
-- **Accent**: Lime Green (#84CC16) - Success and positive actions
-- **Typography**: Inter font family for excellent readability
-
-### Responsive Breakpoints
-- **xs**: 0px+ (Mobile phones)
-- **sm**: 600px+ (Tablets)
-- **md**: 960px+ (Small laptops)
-- **lg**: 1280px+ (Desktops)
-- **xl**: 1920px+ (Large screens)
+```
+cab/
+├── backend/
+│   ├── utils/inMemoryDB.js    # Database & routing logic
+│   ├── serverSimple.js        # Express server
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── components/        # React components
+│   │   ├── theme/            # Material-UI theme
+│   │   ├── styles/           # Responsive CSS
+│   │   └── services/         # API integration
+│   └── package.json
+└── README.md
+```
 
 ## 📁 Project Structure
 
@@ -138,59 +119,28 @@ cab-booking-system/
    ```
    Frontend will start on: `http://localhost:3000`
 
-4. **Access the Application:**
-   Open your browser to `http://localhost:3000`
+## 🗺️ Network & Pricing
 
-### Environment Configuration (Optional)
-For email notifications, create a `.env` file in the backend directory:
-```env
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-NODE_ENV=development
+### Route Network (6 Locations: A-F)
+```
+A ↔ B (5min)   B ↔ C (10min)   C ↔ D (7min)
+A ↔ C (7min)   B ↔ D (15min)   D ↔ E (9min)  
+A ↔ E (20min)  B ↔ E (8min)    D ↔ F (11min)
+               B ↔ F (25min)   E ↔ F (14min)
+               C ↔ E (12min)
+               C ↔ F (6min)
 ```
 
-## 🌟 Features Walkthrough
+### Cab Types & Pricing
+| Type | Base | Per Min | Example (14min route) |
+|------|------|---------|---------------------|
+| Economy | ₹50 | ₹3 | ₹92 |
+| Standard | ₹75 | ₹4 | ₹131 |
+| Premium | ₹100 | ₹6 | ₹184 |
+| Sports | ₹150 | ₹8 | ₹262 |
+| SUV | ₹120 | ₹7 | ₹218 |
 
-### 1. Modern Dashboard
-- **Live Ride Tracking**: Real-time progress with ETA
-- **Quick Actions**: One-click access to all features
-- **Statistics**: Ride history and performance metrics
-- **Theme Toggle**: Switch between dark and light modes
-
-### 2. Smart Booking System
-- **Optional Email**: Book with or without email address
-- **Route Optimization**: Automatic shortest path calculation
-- **Real-time Pricing**: Dynamic cost estimation
-- **Success Animations**: Engaging confirmation feedback
-
-### 3. Mobile Experience
-- **Touch-friendly**: 44px minimum touch targets
-- **Responsive Layout**: Adapts to any screen size
-- **Gesture Support**: Swipe and touch interactions
-- **Performance**: Optimized for mobile networks
-
-## 🛣️ Network Topology
-
-The system includes a pre-configured network with the following routes:
-
-```
-Locations: A, B, C, D, E, F
-
-Route Network:
-A ↔ B (5 min)    B ↔ C (10 min)   C ↔ D (7 min)
-A ↔ C (7 min)    B ↔ D (15 min)   C ↔ E (12 min)
-A ↔ E (20 min)   B ↔ E (8 min)    C ↔ F (6 min)
-                 B ↔ F (25 min)   D ↔ E (9 min)
-                                  D ↔ F (11 min)
-                                  E ↔ F (14 min)
-```
-
-### Example: Shortest Path A → D
-- **Direct Route**: A → D (Not available)
-- **Optimal Path**: A → C → D (Total: 14 minutes)
-- **Alternative**: A → B → D (Total: 20 minutes)
-
-## 🚗 Available Cabs
+**Example:** A→D optimal route = A→C→D (14min) vs A→B→D (20min)
 - MongoDB (v4.4 or higher)
 - npm or yarn
 
@@ -302,43 +252,32 @@ The application will be available at:
 }
 ```
 
-## 🛣️ API Endpoints
+## � API Endpoints
 
-The backend is running on **port 4000** and provides the following endpoints:
+**Backend:** `http://localhost:4000/api`
 
-### Core Endpoints (Working)
-- `GET /api/cabs` - List all active cabs (5 pre-configured)
-- `GET /api/routes` - List all routes (18 bidirectional routes)
-- `POST /api/bookings/calculate` - Calculate shortest path and pricing
-- `POST /api/bookings` - Create new booking
-- `GET /api/bookings` - List all bookings
-- `GET /api/bookings/user/:email` - Get user bookings
+- `GET /cabs` - List available cabs
+- `GET /routes` - List all routes  
+- `POST /bookings/calculate` - Calculate route & price
+- `POST /bookings` - Create booking
+- `GET /bookings/user/:email` - Get user bookings
 
-### Example API Calls
+## 🛠️ Tech Stack
 
-**Get Available Cabs:**
-```bash
-curl http://localhost:4000/api/cabs
-```
+**Frontend:** React 18 + Material-UI v5 + Framer Motion  
+**Backend:** Node.js + Express + In-memory DB  
+**Features:** Dijkstra routing, responsive design, dark/light theme
 
-**Calculate Route & Price:**
-```bash
-curl -X POST http://localhost:4000/api/bookings/calculate \
-  -H "Content-Type: application/json" \
-  -d '{"source":"A","destination":"D","cabType":"Economy"}'
-```
+## 🎯 Usage
 
-**Create Booking:**
-```bash
-curl -X POST http://localhost:4000/api/bookings \
-  -H "Content-Type: application/json" \
-  -d '{
-    "source": "A",
-    "destination": "D", 
-    "cabId": "cab_1",
-    "userEmail": "user@example.com"
-  }'
-```
+1. **Open** `http://localhost:3000`
+2. **Book Ride** → Select route → Choose cab → Confirm  
+3. **View Bookings** → Enter email to track rides
+4. **Mobile** → Fully responsive with touch optimization
+
+---
+
+**Ready to use!** No database setup required - just start both servers and begin booking rides.
 
 ## 🗺️ Network Topology & Routing
 
