@@ -18,24 +18,48 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// MongoDB connection
+// MongoDB connection (fallback to in-memory if MongoDB is not available)
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/cab-booking';
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log('MongoDB connection error:', err));
 
-// Import routes
-const cabRoutes = require('./routes/cabs');
-const bookingRoutes = require('./routes/bookings');
-const routeRoutes = require('./routes/routes');
+let useInMemoryDB = false;
 
-// Use routes
-app.use('/api/cabs', cabRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/routes', routeRoutes);
+const connectToDatabase = async () => {
+  try {
+    await mongoose.connect(MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // 5 second timeout
+    });
+    console.log('MongoDB connected');
+  } catch (err) {
+    console.log('MongoDB connection failed, using in-memory database:', err.message);
+    useInMemoryDB = true;
+  }
+};
+
+// Initialize database connection
+connectToDatabase();
+
+// Import routes (use simple routes if MongoDB fails)
+let cabRoutes, bookingRoutes, routeRoutes;
+
+setTimeout(() => {
+  if (useInMemoryDB) {
+    console.log('Using in-memory database for demo purposes');
+    cabRoutes = require('./routes/cabsSimple');
+    bookingRoutes = require('./routes/bookingsSimple');
+    routeRoutes = require('./routes/routesSimple');
+  } else {
+    cabRoutes = require('./routes/cabs');
+    bookingRoutes = require('./routes/bookings');
+    routeRoutes = require('./routes/routes');
+  }
+
+  // Use routes
+  app.use('/api/cabs', cabRoutes);
+  app.use('/api/bookings', bookingRoutes);
+  app.use('/api/routes', routeRoutes);
+}, 1000); // Give MongoDB 1 second to connect
 
 // Health check endpoint
 app.get('/health', (req, res) => {

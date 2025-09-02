@@ -97,16 +97,18 @@ router.post('/', async (req, res) => {
   try {
     const { userEmail, source, destination, cabId, startTime } = req.body;
     
-    if (!userEmail || !source || !destination || !cabId || !startTime) {
+    if (!source || !destination || !cabId || !startTime) {
       return res.status(400).json({ 
-        error: 'User email, source, destination, cab ID, and start time are required' 
+        error: 'Source, destination, cab ID, and start time are required' 
       });
     }
 
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(userEmail)) {
-      return res.status(400).json({ error: 'Invalid email format' });
+    // Validate email format if provided
+    if (userEmail && userEmail.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(userEmail)) {
+        return res.status(400).json({ error: 'Invalid email format' });
+      }
     }
 
     if (source.toUpperCase() === destination.toUpperCase()) {
@@ -140,7 +142,7 @@ router.post('/', async (req, res) => {
     // Create booking
     const booking = new Booking({
       bookingId: uuidv4().substring(0, 8).toUpperCase(),
-      userEmail: userEmail.toLowerCase(),
+      userEmail: userEmail && userEmail.trim() ? userEmail.toLowerCase() : null,
       source: source.toUpperCase(),
       destination: destination.toUpperCase(),
       cabId,
@@ -165,12 +167,14 @@ router.post('/', async (req, res) => {
     // Populate cab details for response
     await booking.populate('cabId', 'name pricePerMinute');
 
-    // Send confirmation email (don't wait for it)
-    emailService.sendBookingConfirmation(booking, cab)
-      .then(() => {
-        Booking.findByIdAndUpdate(booking._id, { emailSent: true }).exec();
-      })
-      .catch(err => console.error('Failed to send confirmation email:', err));
+    // Send confirmation email only if email is provided (don't wait for it)
+    if (booking.userEmail) {
+      emailService.sendBookingConfirmation(booking, cab)
+        .then(() => {
+          Booking.findByIdAndUpdate(booking._id, { emailSent: true }).exec();
+        })
+        .catch(err => console.error('Failed to send confirmation email:', err));
+    }
 
     res.status(201).json(booking);
   } catch (error) {
@@ -206,13 +210,73 @@ router.patch('/:id/status', async (req, res) => {
       });
     }
 
-    // Send status update email
-    if (status !== 'confirmed') {
+    // Send status update email only if email is provided
+    if (status !== 'confirmed' && booking.userEmail) {
       emailService.sendBookingUpdate(booking, booking.cabId, status)
         .catch(err => console.error('Failed to send update email:', err));
     }
 
     res.json(booking);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Cancel booking by booking ID
+router.post('/cancel', async (req, res) => {
+  try {
+    const { bookingId, userEmail } = req.body;
+    
+    if (!bookingId) {
+      return res.status(400).json({ error: 'Booking ID is required' });
+    }
+
+    // Find booking by bookingId
+    const booking = await Booking.findOne({ bookingId: bookingId.toUpperCase() });
+
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    // Check if booking is already cancelled or completed
+    if (booking.status === 'cancelled') {
+      return res.status(400).json({ error: 'Booking is already cancelled' });
+    }
+
+    if (booking.status === 'completed') {
+      return res.status(400).json({ error: 'Cannot cancel completed booking' });
+    }
+
+    // Optional: Verify email if provided (for additional security)
+    if (userEmail && booking.userEmail && booking.userEmail !== userEmail.toLowerCase()) {
+      return res.status(403).json({ error: 'Email does not match booking' });
+    }
+
+    // Update booking status to cancelled
+    booking.status = 'cancelled';
+    await booking.save();
+
+    // Remove from cab's current bookings
+    const cab = await Cab.findById(booking.cabId);
+    if (cab && cab.currentBookings) {
+      cab.currentBookings = cab.currentBookings.filter(
+        b => b.bookingId !== booking._id
+      );
+      await cab.save();
+    }
+
+    await booking.populate('cabId', 'name pricePerMinute');
+
+    // Send cancellation email if email is provided
+    if (booking.userEmail) {
+      emailService.sendBookingUpdate(booking, booking.cabId, 'cancelled')
+        .catch(err => console.error('Failed to send cancellation email:', err));
+    }
+
+    res.json({ 
+      message: 'Booking cancelled successfully',
+      booking: booking
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

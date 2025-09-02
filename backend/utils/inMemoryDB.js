@@ -54,26 +54,43 @@ class InMemoryDB {
       }
     ];
 
-    // Default routes (bidirectional)
+    // Default routes (bidirectional) - Updated to match reference diagram
     const routeData = [
+      // A ↔ B: 5 min
       { from: 'A', to: 'B', timeInMinutes: 5 },
       { from: 'B', to: 'A', timeInMinutes: 5 },
-      { from: 'A', to: 'C', timeInMinutes: 10 },
-      { from: 'C', to: 'A', timeInMinutes: 10 },
-      { from: 'B', to: 'C', timeInMinutes: 8 },
-      { from: 'C', to: 'B', timeInMinutes: 8 },
-      { from: 'C', to: 'D', timeInMinutes: 7 },
-      { from: 'D', to: 'C', timeInMinutes: 7 },
-      { from: 'D', to: 'E', timeInMinutes: 12 },
-      { from: 'E', to: 'D', timeInMinutes: 12 },
+      
+      // A ↔ C: 7 min  
+      { from: 'A', to: 'C', timeInMinutes: 7 },
+      { from: 'C', to: 'A', timeInMinutes: 7 },
+      
+      // B ↔ C: 5 min
+      { from: 'B', to: 'C', timeInMinutes: 5 },
+      { from: 'C', to: 'B', timeInMinutes: 5 },
+      
+      // B ↔ D: 15 min
+      { from: 'B', to: 'D', timeInMinutes: 15 },
+      { from: 'D', to: 'B', timeInMinutes: 15 },
+      
+      // B ↔ E: 20 min
+      { from: 'B', to: 'E', timeInMinutes: 20 },
+      { from: 'E', to: 'B', timeInMinutes: 20 },
+      
+      // C ↔ E: 35 min
+      { from: 'C', to: 'E', timeInMinutes: 35 },
+      { from: 'E', to: 'C', timeInMinutes: 35 },
+      
+      // D ↔ E: 5 min
+      { from: 'D', to: 'E', timeInMinutes: 5 },
+      { from: 'E', to: 'D', timeInMinutes: 5 },
+      
+      // D ↔ F: 20 min
       { from: 'D', to: 'F', timeInMinutes: 20 },
       { from: 'F', to: 'D', timeInMinutes: 20 },
-      { from: 'E', to: 'F', timeInMinutes: 15 },
-      { from: 'F', to: 'E', timeInMinutes: 15 },
-      { from: 'B', to: 'D', timeInMinutes: 25 },
-      { from: 'D', to: 'B', timeInMinutes: 25 },
-      { from: 'A', to: 'E', timeInMinutes: 30 },
-      { from: 'E', to: 'A', timeInMinutes: 30 }
+      
+      // E ↔ F: 10 min
+      { from: 'E', to: 'F', timeInMinutes: 10 },
+      { from: 'F', to: 'E', timeInMinutes: 10 }
     ];
 
     this.routes = routeData.map((route, index) => ({

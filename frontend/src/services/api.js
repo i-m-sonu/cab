@@ -45,6 +45,7 @@ export const bookingService = {
   getBookingByBookingId: (bookingId) => api.get(`/bookings/booking/${bookingId}`),
   createBooking: (bookingData) => api.post('/bookings', bookingData),
   updateBookingStatus: (id, status) => api.patch(`/bookings/${id}/status`, { status }),
+  cancelBooking: (bookingId, userEmail) => api.post('/bookings/cancel', { bookingId, userEmail }),
   calculateRoute: (source, destination) => 
     api.post('/bookings/calculate', { source, destination }),
   getSources: () => api.get('/bookings/locations/sources'),

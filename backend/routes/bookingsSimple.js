@@ -236,6 +236,66 @@ router.patch('/:id/status', async (req, res) => {
   }
 });
 
+// Cancel booking by booking ID
+router.post('/cancel', async (req, res) => {
+  try {
+    const { bookingId, userEmail } = req.body;
+    
+    if (!bookingId) {
+      return res.status(400).json({ error: 'Booking ID is required' });
+    }
+
+    // Find booking by bookingId
+    const booking = await Booking.findOne({ bookingId: bookingId.toUpperCase() });
+
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    // Check if booking is already cancelled or completed
+    if (booking.status === 'cancelled') {
+      return res.status(400).json({ error: 'Booking is already cancelled' });
+    }
+
+    if (booking.status === 'completed') {
+      return res.status(400).json({ error: 'Cannot cancel completed booking' });
+    }
+
+    // Optional: Verify email if provided (for additional security)
+    if (userEmail && booking.userEmail && booking.userEmail !== userEmail.toLowerCase()) {
+      return res.status(403).json({ error: 'Email does not match booking' });
+    }
+
+    // Update booking status to cancelled
+    booking.status = 'cancelled';
+    await booking.save();
+
+    // Remove from cab's current bookings
+    const cab = await Cab.findById(booking.cabId);
+    if (cab && cab.currentBookings) {
+      cab.currentBookings = cab.currentBookings.filter(
+        b => b.bookingId !== booking._id
+      );
+      await cab.save();
+    }
+
+    await booking.populate('cabId', 'name pricePerMinute');
+
+    // Send cancellation email if email is provided
+    if (booking.userEmail) {
+      emailService.sendBookingUpdate(booking, booking.cabId, 'cancelled')
+        .catch(err => console.error('Failed to send cancellation email:', err));
+    }
+
+    res.json({ 
+      message: 'Booking cancelled successfully',
+      booking: booking
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Get available sources and destinations
 router.get('/locations/sources', async (req, res) => {
   try {

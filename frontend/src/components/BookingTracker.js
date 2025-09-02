@@ -27,6 +27,7 @@ import {
   AttachMoney,
   DirectionsCar,
   Person,
+  Cancel,
 } from '@mui/icons-material';
 import { toast } from 'react-toastify';
 import { bookingService } from '../services/api';
@@ -70,6 +71,48 @@ const BookingTracker = () => {
       } else {
         toast.error('Failed to search booking');
       }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancelBooking = async (bookingData) => {
+    if (bookingData.status === 'cancelled') {
+      toast.error('Booking is already cancelled');
+      return;
+    }
+
+    if (bookingData.status === 'completed') {
+      toast.error('Cannot cancel completed booking');
+      return;
+    }
+
+    const confirmCancel = window.confirm(
+      `Are you sure you want to cancel booking ${bookingData.bookingId}?\n\nThis action cannot be undone.`
+    );
+
+    if (!confirmCancel) return;
+
+    try {
+      setLoading(true);
+      const response = await bookingService.cancelBooking(
+        bookingData.bookingId,
+        bookingData.userEmail
+      );
+      
+      toast.success(response.data.message);
+      
+      // Refresh the booking data
+      if (searchType === 'bookingId') {
+        const updatedBooking = await bookingService.getBookingByBookingId(bookingData.bookingId);
+        setBooking(updatedBooking.data);
+      } else {
+        const updatedBookings = await bookingService.getUserBookings(searchValue);
+        setUserBookings(updatedBookings.data);
+      }
+    } catch (error) {
+      console.error('Error cancelling booking:', error);
+      toast.error(error.response?.data?.error || 'Failed to cancel booking');
     } finally {
       setLoading(false);
     }
@@ -120,11 +163,28 @@ const BookingTracker = () => {
             <Typography variant="h6" gutterBottom>
               Booking ID: {bookingData.bookingId}
             </Typography>
-            <Chip
-              label={bookingData.status.toUpperCase()}
-              color={getStatusColor(bookingData.status)}
-              size="small"
-            />
+            <Box display="flex" alignItems="center" gap={1}>
+              <Chip
+                label={bookingData.status.toUpperCase()}
+                color={getStatusColor(bookingData.status)}
+                size="small"
+              />
+              {(bookingData.status === 'confirmed' || bookingData.status === 'in-progress') && (
+                <Button
+                  size="small"
+                  color="error"
+                  variant="outlined"
+                  startIcon={<Cancel />}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCancelBooking(bookingData);
+                  }}
+                  disabled={loading}
+                >
+                  Cancel
+                </Button>
+              )}
+            </Box>
           </Box>
           <Typography variant="body2" color="textSecondary">
             {new Date(bookingData.createdAt).toLocaleString()}

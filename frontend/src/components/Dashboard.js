@@ -14,6 +14,7 @@ import {
   BookmarkAdded,
   Route,
   TrendingUp,
+  Cancel,
 } from '@mui/icons-material';
 import { Link as RouterLink } from 'react-router-dom';
 import { bookingService, cabService, routeService } from '../services/api';
@@ -214,6 +215,16 @@ const Dashboard = () => {
                 startIcon={<TrendingUp />}
               >
                 Track Booking
+              </Button>
+              <Button
+                component={RouterLink}
+                to="/cancel"
+                variant="outlined"
+                color="error"
+                fullWidth
+                startIcon={<Cancel />}
+              >
+                Cancel Booking
               </Button>
               <Button
                 component={RouterLink}
