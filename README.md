@@ -58,7 +58,6 @@ cab-booking-system/
 │   │   ├── cabs.js         # Cab management endpoints
 │   │   ├── bookings.js     # Booking endpoints
 │   │   └── routes.js       # Route management endpoints
-```
 cab-booking-system/
 ├── backend/
 │   ├── models/
@@ -86,7 +85,6 @@ cab-booking-system/
 │   ├── public/
 │   └── package.json
 └── README.md
-```
 
 ## 🚀 Quick Start
 
